@@ -28,11 +28,44 @@ void    *ft_select_region(size_t regionType, size_t len)
 {
     t_region    *region;
     void        *address;
+    size_t      zone_header;
+    size_t      length_with_quantum;
 
-    region = ft_search_place(regionType, len);
+    address = NULL;
+    region = ft_search_region_place(regionType, len);
     if (!region)
-        address = ft_create_new_list_region(ft_allocate_memory(len));
+    {
+        address = ft_allocate_memory(len);
+        address = ft_create_new_list_region(len, (t_region *)address);
+    }
     else
-
+    {
+        if (regionType == TINY_TYPE)
+        {
+            zone_header = (sizeof(t_zone) + (TINY_QUANTUM_SIZE - (sizeof(t_zone) % TINY_QUANTUM_SIZE)));
+            length_with_quantum = (len + (TINY_QUANTUM_SIZE - (len % TINY_QUANTUM_SIZE)));
+        }
+        else if (regionType == SMALL_TYPE)
+        {
+            zone_header = (sizeof(t_zone) + (SMALL_QUANTUM_SIZE - (sizeof(t_zone) % SMALL_QUANTUM_SIZE)));
+            length_with_quantum = (len + (SMALL_QUANTUM_SIZE - (len % SMALL_QUANTUM_SIZE)));
+        }
+        else
+        {
+            zone_header = (sizeof(t_zone) + (LARGE_QUANTUM_SIZE - (sizeof(t_zone) % LARGE_QUANTUM_SIZE)));
+            length_with_quantum = (len + (LARGE_QUANTUM_SIZE - (len % LARGE_QUANTUM_SIZE)));
+        }
+        region->length = region->length - (zone_header + length_with_quantum);
+        address = ft_get_free_zone(region, (length_with_quantum + zone_header));
+        if (!address)
+        {
+            address = ft_allocate_memory(len);
+            address = ft_create_new_list_region(len, (t_region *)address);
+        }
+        else
+        {
+            address = ft_create_new_zone_list((t_zone *)address, length_with_quantum, region->length - (zone_header + length_with_quantum), zone_header);
+        }
+    }
     return address;
 }

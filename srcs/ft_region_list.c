@@ -19,7 +19,7 @@ int     get_list_region_length(size_t region) {
     size_t      i;
 
     i = 0;
-    current = base.tabList[region];
+    current = base.tabList[region - 1];
     while (current)
     {
         i++;
@@ -28,37 +28,45 @@ int     get_list_region_length(size_t region) {
     return i;
 }
 
-int     ft_search_region_place(size_t region, size_t len)
+void     *ft_search_region_place(size_t region, size_t len)
 {
     t_region    *current;
+    size_t      zone_header;
+    size_t      length_with_quantum;
 
-    current = base.tabList[region];
+    current = base.tabList[region - 1];
     while (current)
     {
         if (region == TINY_TYPE)
         {
-            if (current->length > (len + TINY_QUANTUM_SIZE))
-                return &current
+            zone_header = (sizeof(t_zone) + (TINY_QUANTUM_SIZE - (sizeof(t_zone) % TINY_QUANTUM_SIZE)));
+            length_with_quantum = (len + (TINY_QUANTUM_SIZE - (len % TINY_QUANTUM_SIZE)));
+            if (current->length > zone_header + length_with_quantum)
+                return current;
         }
         else if (region == SMALL_TYPE)
         {
-            if (current->length > (len + SMALL_QUANTUM_SIZE))
-                return &current
+            zone_header = (sizeof(t_zone) + (SMALL_QUANTUM_SIZE - (sizeof(t_zone) % SMALL_QUANTUM_SIZE)));
+            length_with_quantum = (len + (SMALL_QUANTUM_SIZE - (len % SMALL_QUANTUM_SIZE)));
+            if (current->length > zone_header + length_with_quantum)
+                return current;
         }
         else
         {
-            if (current->length > (len + LARGE_QUANTUM_SIZE))
-                return &current
+            zone_header = (sizeof(t_zone) + (LARGE_QUANTUM_SIZE - (sizeof(t_zone) % LARGE_QUANTUM_SIZE)));
+            length_with_quantum = (len + (LARGE_QUANTUM_SIZE - (len % LARGE_QUANTUM_SIZE)));
+            if (current->length > zone_header + length_with_quantum)
+                return current;
         }
         current = current->next;
     }
-    return 0;
+    return NULL;
 }
 
 void    *get_last_list_region(size_t region) {
     t_region    *current;
 
-    current = base.tabList[region];
+    current = base.tabList[region - 1];
     while (current && current->next)
     {
         current = current->next;
@@ -69,29 +77,46 @@ void    *get_last_list_region(size_t region) {
 void    *ft_create_new_list_region(size_t len, t_region *address)
 {
     t_region    *lastElement;
+    size_t         header_length;
+    size_t         zone_header;
+    size_t         length_with_quantum;
 
-    address->next = 0;
+    address->next = NULL;
     address->type = ft_get_type_region(len);
     if (address->type == TINY_TYPE)
     {
-        address->zone = (void *)address + sizeof(t_region) + (TINY_QUANTUM_SIZE - (sizeof(t_region) % TINY_QUANTUM_SIZE));
-        address->length = TINY_LENGTH - (sizeof(t_region) + (TINY_QUANTUM_SIZE - (sizeof(t_region) % TINY_QUANTUM_SIZE))) - (len + (TINY_QUANTUM_SIZE - (len % TINY_QUANTUM_SIZE)));
+        header_length = (sizeof(t_region) + (TINY_QUANTUM_SIZE - (sizeof(t_region) % TINY_QUANTUM_SIZE)));
+        zone_header = (sizeof(t_zone) + (TINY_QUANTUM_SIZE - (sizeof(t_zone) % TINY_QUANTUM_SIZE)));
+        length_with_quantum = (len + (TINY_QUANTUM_SIZE - (len % TINY_QUANTUM_SIZE)));
+        address->length = TINY_LENGTH - header_length;
+        address->length -= zone_header;
+        address->length -= length_with_quantum;
+        address->zone = (void *)address + header_length;
     }
     else if (address->type == SMALL_TYPE)
     {
-        address->zone = (void *)address + sizeof(t_region) + (SMALL_QUANTUM_SIZE - (sizeof(t_region) % SMALL_QUANTUM_SIZE));
-        address->length = SMALL_LENGTH - (sizeof(t_region) + (SMALL_QUANTUM_SIZE - (sizeof(t_region) % SMALL_QUANTUM_SIZE))) - (len + (SMALL_QUANTUM_SIZE - (len % SMALL_QUANTUM_SIZE)));
+        header_length = (sizeof(t_region) + (SMALL_QUANTUM_SIZE - (sizeof(t_region) % SMALL_QUANTUM_SIZE)));
+        zone_header = (sizeof(t_zone) + (SMALL_QUANTUM_SIZE - (sizeof(t_zone) % SMALL_QUANTUM_SIZE)));
+        length_with_quantum = (len + (SMALL_QUANTUM_SIZE - (len % SMALL_QUANTUM_SIZE)));
+        address->length = SMALL_LENGTH - header_length;
+        address->length -= zone_header;
+        address->length -= length_with_quantum;
+        address->zone = (void *)address + header_length;
     }
     else
     {
-        address->zone = (void *)address + sizeof(t_region) + (LARGE_QUANTUM_SIZE - (sizeof(t_region) % LARGE_QUANTUM_SIZE));
-        address->length = (len + (PAGESIZE - (len % PAGESIZE)) * 100) - (sizeof(t_region) + (LARGE_QUANTUM_SIZE - (sizeof(t_region) % LARGE_QUANTUM_SIZE))) - (len + (LARGE_QUANTUM_SIZE - (len % LARGE_QUANTUM_SIZE)));
+        header_length = (sizeof(t_region) + (LARGE_QUANTUM_SIZE - (sizeof(t_region) % LARGE_QUANTUM_SIZE)));
+        zone_header = (sizeof(t_zone) + (LARGE_QUANTUM_SIZE - (sizeof(t_zone) % LARGE_QUANTUM_SIZE)));
+        length_with_quantum = (len + (LARGE_QUANTUM_SIZE - (len % LARGE_QUANTUM_SIZE)));
+        address->length = (len + (PAGESIZE - (len % PAGESIZE)) * 100) - header_length;
+        address->length -= zone_header;
+        address->length -= length_with_quantum;
+        address->zone = (void *)address + header_length;
     }
     lastElement = get_last_list_region(address->type);
     if (!lastElement)
-        base.tabList[address->type] = address;
+        base.tabList[address->type - 1] = address;
     else
         lastElement->next = address;
-    ft_create_new_zone_list((t_zone *)address->zone, len);
-    return address->zone;
+    return ft_create_new_zone_list((t_zone *)address->zone, length_with_quantum, address->length, zone_header);
 }

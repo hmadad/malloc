@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_putnbr_base.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmadad <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,23 +10,24 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/mman.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include "includes/ft_malloc.h"
+#include "../includes/ft_malloc.h"
 
-int		main(int ac, char **av) {
-    char *str;
-    char *str2;
-    int  i;
+void    ft_putnbr_base(size_t nb, int base)
+{
+    size_t n;
+    char nbr;
 
-    (void)ac;
-    i = atoi(av[1]);
-    str = (char *)ft_malloc(200);
-    while (i-- != 0)
-        str2 = (char *)ft_malloc(1);
-
-    ft_show_alloc_mem();
-    return (0);
+    n = nb;
+    nbr = '\0';
+    if (nb >= (size_t)base)
+    {
+        ft_putnbr_base(n / base, base);
+        ft_putnbr_base(n % base, base);
+    } else {
+        if (base > 10)
+            nbr = (n > 9 ? (('a' - 10) + n) : ('0' + n));
+        else
+            nbr = '0' + n;
+        write(1, &nbr, 1);
+    }
 }
