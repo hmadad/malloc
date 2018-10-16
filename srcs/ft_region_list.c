@@ -77,9 +77,10 @@ void    *get_last_list_region(size_t region) {
 void    *ft_create_new_list_region(size_t len, t_region *address)
 {
     t_region    *lastElement;
-    size_t         header_length;
-    size_t         zone_header;
-    size_t         length_with_quantum;
+    size_t      header_length;
+    size_t      zone_header;
+    size_t      length_with_quantum;
+    t_zone      *zone;
 
     address->next = NULL;
     address->type = ft_get_type_region(len);
@@ -108,7 +109,7 @@ void    *ft_create_new_list_region(size_t len, t_region *address)
         header_length = (sizeof(t_region) + (LARGE_QUANTUM_SIZE - (sizeof(t_region) % LARGE_QUANTUM_SIZE)));
         zone_header = (sizeof(t_zone) + (LARGE_QUANTUM_SIZE - (sizeof(t_zone) % LARGE_QUANTUM_SIZE)));
         length_with_quantum = (len + (LARGE_QUANTUM_SIZE - (len % LARGE_QUANTUM_SIZE)));
-        address->length = (len + (PAGESIZE - (len % PAGESIZE)) * 100) - header_length;
+
         address->length -= zone_header;
         address->length -= length_with_quantum;
         address->zone = (void *)address + header_length;
@@ -118,5 +119,9 @@ void    *ft_create_new_list_region(size_t len, t_region *address)
         base.tabList[address->type - 1] = address;
     else
         lastElement->next = address;
-    return ft_create_new_zone_list((t_zone *)address->zone, length_with_quantum, address->length, zone_header);
+    zone = address->zone;
+    zone->length = address->length + header_length + length_with_quantum;
+    zone->free = TRUE;
+    zone->next = NULL;
+    return ft_create_new_zone_list((t_zone *)address->zone, length_with_quantum, zone_header);
 }

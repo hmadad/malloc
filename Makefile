@@ -5,7 +5,7 @@ CFLAGS= -Wall -Wextra -Werror
 INCLUDE= -I srcs/includes
 LDFLAGS = -shared
 SRC= srcs/ft_malloc.c srcs/ft_region_list.c srcs/ft_zone_list.c srcs/ft_region_tools.c srcs/ft_putstr.c srcs/ft_strlen.c \
-srcs/ft_putnbr_base.c srcs/ft_show_alloc_mem.c
+srcs/ft_putnbr_base.c srcs/ft_show_alloc_mem.c srcs/ft_free.c srcs/ft_realloc.c
 OBJECTS= $(SRC:.c=.o)
 
 ifeq ($(HOSTTYPE),)

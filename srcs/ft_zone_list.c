@@ -28,23 +28,37 @@ void    *ft_get_free_zone(t_region *region, size_t lenWithQuantium)
     return NULL;
 }
 
-void    *ft_create_new_zone_list(t_zone *newZone, size_t zoneLength, size_t nextZoneLength, size_t zone_header_length)
+t_zone *ft_find_zone(void *address, t_region *region)
+{
+    t_zone *current;
+    current = region->zone;
+    while(current)
+    {
+        if (current->content == address)
+            return current;
+        current = current->next;
+    }
+    return NULL;
+}
+
+void    *ft_create_new_zone_list(t_zone *newZone, size_t zoneLength, size_t zone_header_length)
 {
     t_zone  *newNext;
 
-    if (nextZoneLength < zone_header_length)
-        newNext = NULL;
-    else
+    newNext = NULL;
+    //printf("(newZone->length - zoneLength) = %zu && zone_header_length = %zu\n", (newZone->length - zoneLength), zone_header_length);
+    if ((newZone->length - zoneLength) > zone_header_length)
     {
         newNext = (void *)newZone + zone_header_length + zoneLength;
-        newNext->length = nextZoneLength;
+        newNext->length = (newZone->length - zoneLength);
         newNext->free = TRUE;
         newNext->next = NULL;
         newNext->content = (void *)newZone + zone_header_length;
     }
     newZone->free = FALSE;
     newZone->length = zoneLength;
-    newZone->next = newNext;
+    if (newNext)
+        newZone->next = newNext;
     newZone->content = (void *)newZone + zone_header_length;
     return (void *)newZone->content;
 }

@@ -56,7 +56,7 @@ void    *ft_select_region(size_t regionType, size_t len)
             length_with_quantum = (len + (LARGE_QUANTUM_SIZE - (len % LARGE_QUANTUM_SIZE)));
         }
         region->length = region->length - (zone_header + length_with_quantum);
-        address = ft_get_free_zone(region, (length_with_quantum + zone_header));
+        address = ft_get_free_zone(region, length_with_quantum);
         if (!address)
         {
             address = ft_allocate_memory(len);
@@ -64,8 +64,28 @@ void    *ft_select_region(size_t regionType, size_t len)
         }
         else
         {
-            address = ft_create_new_zone_list((t_zone *)address, length_with_quantum, region->length - (zone_header + length_with_quantum), zone_header);
+            address = ft_create_new_zone_list((t_zone *)address, length_with_quantum, zone_header);
         }
     }
     return address;
+}
+
+t_region *ft_find_region(void * address)
+{
+    int i;
+    i = 0;
+    t_region *current;
+
+    while(i < 3)
+    {
+        current = base.tabList[i];
+        while (current)
+        {
+            if (address > (void *)base.tabList[i] && address < ((void *)base.tabList[i] + base.tabList[i]->length))
+                return current;
+            current = current->next;
+        }
+        i++;
+    }
+    return NULL;
 }

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_free.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmadad <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,23 +10,36 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <sys/mman.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include "includes/ft_malloc.h"
+#include "../includes/ft_malloc.h"
 
-int		main(int ac, char **av) {
-    char *str;
-    char *str2;
-    int  i;
+t_base base;
 
-    (void)ac;
-    i = atoi(av[1]);
-    str = (char *)ft_malloc(200);
-    while (i-- != 0)
-        str2 = (char *)ft_malloc(1);
 
-    ft_show_alloc_mem();
-    return (0);
+
+void ft_reset_str(char *str)
+{
+    int i;
+
+    i = 0;
+    while (i < 8)
+    {
+        str[i] = 0;
+        i++;
+    }
+}
+
+void	ft_free(void * address)
+{
+    t_region * region;
+    t_zone * zone;
+    if (!address)
+        return;
+    region = ft_find_region(address);
+    if (!region)
+        return;
+    zone = ft_find_zone(address, region);
+    if (!zone)
+        return;
+    zone->free = TRUE;
+    ft_reset_str(zone->content);
 }

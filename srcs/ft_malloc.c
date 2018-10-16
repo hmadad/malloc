@@ -14,13 +14,6 @@
 
 t_base base;
 
-void    *ft_search_zone(size_t len, void *address)
-{
-    (void)len;
-    (void)address;
-    return address;
-}
-
 void    *ft_create_region(size_t len)
 {
     void *address;

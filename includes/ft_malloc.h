@@ -53,38 +53,47 @@ typedef struct      s_base {
 
 extern struct s_base base;
 
-//FT_MALLOC FUNCTIONS
-void	*ft_malloc(size_t len);
-void    *ft_create_region(size_t len);
-void    *ft_search_zone(size_t len, void *address);
-void    *ft_allocate_memory(size_t len);
+//FT_MALLOC
+void	    *ft_malloc(size_t len);
+void        *ft_create_region(size_t len);
+void        *ft_search_zone(size_t len, void *address);
+void        *ft_allocate_memory(size_t len);
 
-//FT_REGION_LIST FUNCTIONS
-void    *ft_create_new_list_region(size_t len, t_region *address);
-void    *get_last_list_region(size_t region);
-int     get_list_region_length(size_t region);
-int     ft_get_type_region(size_t len);
-void    *ft_search_region_place(size_t region, size_t len);
+//FT_REGION_LIST
+void        *ft_create_new_list_region(size_t len, t_region *address);
+void        *get_last_list_region(size_t region);
+int         get_list_region_length(size_t region);
+void        *ft_search_region_place(size_t region, size_t len);
 
-//FT_ZONE_LIST FUNCTIONS
-void    *ft_create_new_zone_list(t_zone *newZone, size_t zoneLength, size_t nextZoneLength, size_t zone_header_length);
-void    *ft_get_free_zone(t_region *region, size_t len);
+//FT_ZONE_LIST
+void        *ft_create_new_zone_list(t_zone *newZone, size_t zoneLength, size_t zone_header_length);
+void        *ft_get_free_zone(t_region *region, size_t len);
+t_zone      *ft_find_zone(void *address, t_region *region);
 
 //FT_REGION_TOOLS
-void    *ft_select_region(size_t regionType, size_t lenWithQuantium);
+void        *ft_select_region(size_t regionType, size_t lenWithQuantium);
+t_region    *ft_find_region(void * address);
+int         ft_get_type_region(size_t len);
 
 //FT_SHOW_ALLOC_MEM
-void    ft_show_alloc_mem();
-void    ft_print_region(t_region *region, size_t regionType);
-void    ft_print_zone(t_zone *zone);
+void        ft_show_alloc_mem();
+void        ft_print_region(t_region *region, size_t regionType);
+void        ft_print_zone(t_zone *zone);
 
 //FT_PUTNBR_BASE
-void    ft_putnbr_base(size_t nb, int base);
+void        ft_putnbr_base(size_t nb, int base);
 
 //FT_PUTSTR
-void    ft_putstr(const char *str);
+void        ft_putstr(const char *str);
 
 //FT_STRLEN
-size_t    ft_strlen(const char *str);
+size_t      ft_strlen(const char *str);
+
+//FT_FREE
+void	    ft_free(void * address);
+void        ft_reset_str(char *str);
+
+//FT_REALLOC
+void	    *ft_realloc(void * address, size_t newLength);
 
 #endif //MALLOC_FT_MALLOC_H
