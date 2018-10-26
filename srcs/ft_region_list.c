@@ -41,7 +41,7 @@ void     *ft_search_region_place(size_t region, size_t len)
         {
             zone_header = (sizeof(t_zone) + (TINY_QUANTUM_SIZE - (sizeof(t_zone) % TINY_QUANTUM_SIZE)));
             length_with_quantum = (len + (TINY_QUANTUM_SIZE - (len % TINY_QUANTUM_SIZE)));
-            if (current->length > zone_header + length_with_quantum)
+            if (current->length > (zone_header + length_with_quantum))
                 return current;
         }
         else if (region == SMALL_TYPE)
@@ -109,7 +109,7 @@ void    *ft_create_new_list_region(size_t len, t_region *address)
         header_length = (sizeof(t_region) + (LARGE_QUANTUM_SIZE - (sizeof(t_region) % LARGE_QUANTUM_SIZE)));
         zone_header = (sizeof(t_zone) + (LARGE_QUANTUM_SIZE - (sizeof(t_zone) % LARGE_QUANTUM_SIZE)));
         length_with_quantum = (len + (LARGE_QUANTUM_SIZE - (len % LARGE_QUANTUM_SIZE)));
-
+        address->length = (len + (PAGESIZE - (len % PAGESIZE))) * 100 - header_length;
         address->length -= zone_header;
         address->length -= length_with_quantum;
         address->zone = (void *)address + header_length;

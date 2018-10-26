@@ -1,7 +1,7 @@
 .PHONE: all clean fclean
 
 CC = gcc
-CFLAGS= -Wall -Wextra -Werror
+CFLAGS= -Wall -Wextra -Werror -g
 INCLUDE= -I srcs/includes
 LDFLAGS = -shared
 SRC= srcs/ft_malloc.c srcs/ft_region_list.c srcs/ft_zone_list.c srcs/ft_region_tools.c srcs/ft_putstr.c srcs/ft_strlen.c \
@@ -17,7 +17,7 @@ NAME= libft_malloc_$(HOSTTYPE).so
 all:$(NAME)
 
 test: all
-	@gcc -L $(shell pwd) $(CFLAGS) -o test main.c -lft_malloc
+	@gcc -L $(shell pwd) $(CFLAGS) -o malloc main.c -lft_malloc
 
 $(NAME):$(OBJECTS)
 	@$(CC) $^ $(LDFLAGS) -o $@ $(INCLUDE) $(CFLAGS)
@@ -32,5 +32,6 @@ clean:
 fclean: clean
 	@rm -rf $(NAME)
 	@rm -rf libft_malloc.so
+	@rm -rf malloc
 
 re: fclean test

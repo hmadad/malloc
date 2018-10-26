@@ -18,8 +18,7 @@
 
 int		main(int ac, char **av) {
     char *str;
-    char *str2;
-    //char *str3;
+    char *str2[1000];
     int  i;
 
     (void)ac;
@@ -29,23 +28,25 @@ int		main(int ac, char **av) {
         return 0;
     }
     i = atoi(av[1]);
-    str = (char *)ft_malloc(200);
+    str = (char *)malloc(200);
     while (i-- != 0)
-        str2 = (char *)ft_malloc(1);
-    ft_show_alloc_mem();
-    str2 = ft_realloc(str2, 16);
-    ft_show_alloc_mem();
-
-    str2 = ft_realloc(str2, 1);
-    ft_show_alloc_mem();
-    str2 = ft_realloc(str2, 16);
-    ft_show_alloc_mem();
-    str2 = ft_realloc(str2, 1);
-    str2 = ft_realloc(str2, 16);
-    str2 = ft_realloc(str2, 1);
-    str2 = ft_realloc(str2, 16);
-    str2 = ft_realloc(str2, 1);
-    str2 = ft_realloc(str2, 16);
+        str2[i] = (char *)malloc(900);
+    free(str2[12]);
+    free(str2[13]);
+    free(str2[14]);
+    free(str2[15]);
+    free(str2[16]);
+    free(str2[120]);
+    str2[0] = realloc(str2[127], 500);
+    str2[0] = realloc(str2[128], 500);
+    str2[0] = realloc(str2[129], 500);
+    str2[0] = realloc(str2[2], 500);
+    str2[0] = realloc(str2[997], 500);
+    str2[0] = realloc(str2[998], 500);
+    str2[0] = realloc(str2[0], 500);
+    str2[0] = realloc(str2[0], 500);
+    str2[0] = realloc(str2[0], 500);
+    str2[0] = realloc(str2[0], 500);
     ft_show_alloc_mem();
 
     return (0);

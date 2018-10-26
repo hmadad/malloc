@@ -20,7 +20,7 @@ void    *ft_create_region(size_t len)
     int regionType;
 
     regionType = ft_get_type_region(len);
-    address = ft_allocate_memory(len);
+    address = ft_allocate_memory(len, regionType);
     if (get_list_region_length(regionType) == 0)
         address = ft_create_new_list_region(len, (t_region *)address);
     else
@@ -28,34 +28,23 @@ void    *ft_create_region(size_t len)
     return (void*)address;
 }
 
-void    *ft_allocate_memory(size_t len)
+void    *ft_allocate_memory(size_t len, size_t type)
 {
     void *address;
     //size_t pageSize;
 
     //pageSize = getpagesize();
-    if ((len + TINY_QUANTUM_SIZE) < TINY_LIMIT)
-    {
+    if (type == TINY_TYPE)
         address = mmap(0, TINY_LENGTH, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
-        printf("address => %p - %p\n", address, address + TINY_LENGTH);
-        ft_putnbr_base((size_t)((address + TINY_LENGTH) - address), 10);
-        write(1, "\n", 1);
-    }
-    else if ((len + SMALL_QUANTUM_SIZE) < SMALL_LIMIT && (len + TINY_QUANTUM_SIZE) > TINY_LIMIT)
-    {
+    else if (type == SMALL_TYPE)
         address = mmap(0, SMALL_LENGTH, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
-        printf("address => %p - %p\n", address, address + SMALL_LENGTH);
-    }
     else
-    {
-        address = mmap(0, len + (PAGESIZE - (len % PAGESIZE)) * 100, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
-        printf("address => %p - %p\n", address, address + len + (PAGESIZE - (len % PAGESIZE)) * 100);
-    }
+        address = mmap(0, (len + (PAGESIZE - (len % PAGESIZE))) * 100, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
 
     return address;
 }
 
-void	*ft_malloc(size_t len)
+void	*malloc(size_t len)
 {
     void    *address;
 

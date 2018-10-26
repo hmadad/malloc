@@ -35,7 +35,9 @@ t_zone *ft_find_zone(void *address, t_region *region)
     while(current)
     {
         if (current->content == address)
+        {
             return current;
+        }
         current = current->next;
     }
     return NULL;
@@ -46,19 +48,23 @@ void    *ft_create_new_zone_list(t_zone *newZone, size_t zoneLength, size_t zone
     t_zone  *newNext;
 
     newNext = NULL;
-    //printf("(newZone->length - zoneLength) = %zu && zone_header_length = %zu\n", (newZone->length - zoneLength), zone_header_length);
-    if ((newZone->length - zoneLength) > zone_header_length)
+    if (newZone->length > zoneLength && (newZone->length - zoneLength) > zone_header_length)
     {
-        newNext = (void *)newZone + zone_header_length + zoneLength;
-        newNext->length = (newZone->length - zoneLength);
+        newNext = (void *)newZone + (zone_header_length + zoneLength);
+        newNext->length = (newZone->length - (zone_header_length + zoneLength));
         newNext->free = TRUE;
-        newNext->next = NULL;
-        newNext->content = (void *)newZone + zone_header_length;
+        if (newZone->next)
+            newNext->next = newZone->next;
+        else
+            newNext->next = NULL;
+        newNext->content = (void *)newNext + zone_header_length;
     }
     newZone->free = FALSE;
-    newZone->length = zoneLength;
     if (newNext)
+    {
+        newZone->length = zoneLength;
         newZone->next = newNext;
+    }
     newZone->content = (void *)newZone + zone_header_length;
     return (void *)newZone->content;
 }

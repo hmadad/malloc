@@ -16,6 +16,7 @@
 #include <sys/mman.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 //PAGE SIZE
 #define PAGESIZE 4098
@@ -42,6 +43,7 @@ typedef struct      s_zone {
 typedef struct      s_region {
     enum regionType type;
     size_t          length;
+    size_t          totalLength;
     struct s_region *next;
     struct s_zone   *zone;
 }                   t_region;
@@ -53,11 +55,11 @@ typedef struct      s_base {
 
 extern struct s_base base;
 
-//FT_MALLOC
-void	    *ft_malloc(size_t len);
+//MALLOC
+void	    *malloc(size_t len);
 void        *ft_create_region(size_t len);
 void        *ft_search_zone(size_t len, void *address);
-void        *ft_allocate_memory(size_t len);
+void        *ft_allocate_memory(size_t len, size_t type);
 
 //FT_REGION_LIST
 void        *ft_create_new_list_region(size_t len, t_region *address);
@@ -89,11 +91,12 @@ void        ft_putstr(const char *str);
 //FT_STRLEN
 size_t      ft_strlen(const char *str);
 
-//FT_FREE
-void	    ft_free(void * address);
+//FREE
+void	    free(void * address);
 void        ft_reset_str(char *str);
+void        defrag(t_region *region, size_t regionType);
 
-//FT_REALLOC
-void	    *ft_realloc(void * address, size_t newLength);
+//REALLOC
+void	    *realloc(void * address, size_t newLength);
 
 #endif //MALLOC_FT_MALLOC_H

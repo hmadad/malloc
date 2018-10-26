@@ -18,7 +18,7 @@ int     ft_get_type_region(size_t len)
 {
     if (len < TINY_LIMIT)
         return TINY_TYPE;
-    else if (len < SMALL_LIMIT && len > TINY_LIMIT)
+    else if (len < SMALL_LIMIT && len >= TINY_LIMIT)
         return SMALL_TYPE;
     else
         return LARGE_TYPE;
@@ -35,7 +35,7 @@ void    *ft_select_region(size_t regionType, size_t len)
     region = ft_search_region_place(regionType, len);
     if (!region)
     {
-        address = ft_allocate_memory(len);
+        address = ft_allocate_memory(len, regionType);
         address = ft_create_new_list_region(len, (t_region *)address);
     }
     else
@@ -59,7 +59,7 @@ void    *ft_select_region(size_t regionType, size_t len)
         address = ft_get_free_zone(region, length_with_quantum);
         if (!address)
         {
-            address = ft_allocate_memory(len);
+            address = ft_allocate_memory(len, regionType);
             address = ft_create_new_list_region(len, (t_region *)address);
         }
         else
@@ -81,7 +81,7 @@ t_region *ft_find_region(void * address)
         current = base.tabList[i];
         while (current)
         {
-            if (address > (void *)base.tabList[i] && address < ((void *)base.tabList[i] + base.tabList[i]->length))
+            if (address > (void *)current && address < ((void *)current + current->length))
                 return current;
             current = current->next;
         }

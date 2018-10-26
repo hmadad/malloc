@@ -18,6 +18,7 @@ void    ft_print_zone(t_zone *zone)
 {
     while (zone)
     {
+
         if (zone->free == FALSE)
         {
             write(1, "0x", 2);
@@ -27,6 +28,14 @@ void    ft_print_zone(t_zone *zone)
             ft_putstr(" : ");
             ft_putnbr_base((size_t)zone->length, 10);
             ft_putstr(" octets\n");
+        }
+        else
+        {
+            write(1, "0x", 2);
+            ft_putnbr_base((size_t)zone->content, 16);
+            ft_putstr(" : ");
+            ft_putnbr_base((size_t)zone->length, 10);
+            ft_putstr(" octets - FREE\n");
         }
         zone = zone->next;
     }
