@@ -100,7 +100,7 @@ void	free(void * address)
     zone->free = TRUE;
     ft_reset_str(zone->content);
     region->length += zone->length;
-    //defrag(region, ft_get_type_region(zone->length));
+    defrag(region, ft_get_type_region(zone->length));
     //if (get_list_region_length(region) == 0)
         //delete_map(region);
 }

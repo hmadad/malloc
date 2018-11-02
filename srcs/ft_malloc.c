@@ -6,7 +6,7 @@
 /*   By: hmadad <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/31 12:04:00 by hmadad            #+#    #+#             */
-/*   Updated: 2018/08/31 15:11:51 by hmadad           ###   ########.fr       */
+/*   Updated: 2018/10/31 10:58:15 by hmadad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,5 +56,5 @@ void	*malloc(size_t len)
     }
     else
         address = ft_select_region(ft_get_type_region(len), len);
-    return (void*)address;
+	return (void*)address;
 }

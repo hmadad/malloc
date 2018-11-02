@@ -6,7 +6,7 @@
 /*   By: hmadad <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/31 12:04:00 by hmadad            #+#    #+#             */
-/*   Updated: 2018/08/31 15:11:51 by hmadad           ###   ########.fr       */
+/*   Updated: 2018/11/02 10:57:24 by hmadad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ void    *ft_create_new_list_region(size_t len, t_region *address)
     else
         lastElement->next = address;
     zone = address->zone;
-    zone->length = address->length + header_length + length_with_quantum;
+    zone->length = address->length;
     zone->free = TRUE;
     zone->next = NULL;
     return ft_create_new_zone_list((t_zone *)address->zone, length_with_quantum, zone_header);

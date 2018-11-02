@@ -46,7 +46,7 @@ void *ft_should_i_realloc(size_t newLength, t_zone *zone, t_region *region)
     else
         len = (newLength + (LARGE_QUANTUM_SIZE - (newLength % LARGE_QUANTUM_SIZE)));
     if (len == zone->length)
-        return zone;
+        return zone->content;
     else
         newMalloc = malloc(newLength);
     ft_copy_and_free(newMalloc, zone, newLength);
@@ -70,6 +70,6 @@ void	*realloc(void * address, size_t newLength)
     if (!zone)
         return NULL;
     ptr = ft_should_i_realloc(newLength, zone, region);
-    //defrag(region, ft_get_type_region(zone->length));
+    defrag(region, ft_get_type_region(zone->length));
     return ptr;
 }
