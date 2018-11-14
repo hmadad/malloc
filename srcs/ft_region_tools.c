@@ -12,7 +12,7 @@
 
 #include "../includes/ft_malloc.h"
 
-t_base base;
+t_base g_base;
 
 int     ft_get_type_region(size_t len)
 {
@@ -78,10 +78,10 @@ t_region *ft_find_region(void * address)
 
     while(i < 3)
     {
-        current = base.tabList[i];
+        current = g_base.tabList[i];
         while (current)
         {
-            if (address > (void *)current && address < ((void *)current + current->length))
+            if (address > (void *)current && address < ((void *)current + current->totalLength))
                 return current;
             current = current->next;
         }

@@ -12,7 +12,7 @@
 
 #include "../includes/ft_malloc.h"
 
-t_base base;
+t_base g_base;
 
 void    *ft_create_region(size_t len)
 {
@@ -49,9 +49,9 @@ void	*malloc(size_t len)
     void    *address;
 
     address = NULL;
-    if (!base.called || base.called == 0)
+    if (!g_base.called || g_base.called == 0)
     {
-        base.called = 1;
+		g_base.called = 1;
         address = ft_create_region(len);
     }
     else

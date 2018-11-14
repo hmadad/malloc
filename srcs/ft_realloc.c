@@ -12,7 +12,7 @@
 
 #include "../includes/ft_malloc.h"
 
-t_base base;
+t_base g_base;
 
 void    ft_copy_and_free(void *newZone, t_zone *oldZone, size_t newLength)
 {
@@ -56,7 +56,7 @@ void *ft_should_i_realloc(size_t newLength, t_zone *zone, t_region *region)
 
 void	*realloc(void * address, size_t newLength)
 {
-    t_region * region;
+	t_region * region;
     t_zone * zone;
     void * ptr;
 

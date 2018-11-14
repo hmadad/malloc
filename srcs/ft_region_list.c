@@ -12,14 +12,14 @@
 
 #include "../includes/ft_malloc.h"
 
-t_base base;
+t_base g_base;
 
 int     get_list_region_length(size_t region) {
     t_region    *current;
     size_t      i;
 
     i = 0;
-    current = base.tabList[region - 1];
+    current = g_base.tabList[region - 1];
     while (current)
     {
         i++;
@@ -34,7 +34,7 @@ void     *ft_search_region_place(size_t region, size_t len)
     size_t      zone_header;
     size_t      length_with_quantum;
 
-    current = base.tabList[region - 1];
+    current = g_base.tabList[region - 1];
     while (current)
     {
         if (region == TINY_TYPE)
@@ -66,7 +66,7 @@ void     *ft_search_region_place(size_t region, size_t len)
 void    *get_last_list_region(size_t region) {
     t_region    *current;
 
-    current = base.tabList[region - 1];
+    current = g_base.tabList[region - 1];
     while (current && current->next)
     {
         current = current->next;
@@ -89,6 +89,7 @@ void    *ft_create_new_list_region(size_t len, t_region *address)
         header_length = (sizeof(t_region) + (TINY_QUANTUM_SIZE - (sizeof(t_region) % TINY_QUANTUM_SIZE)));
         zone_header = (sizeof(t_zone) + (TINY_QUANTUM_SIZE - (sizeof(t_zone) % TINY_QUANTUM_SIZE)));
         length_with_quantum = (len + (TINY_QUANTUM_SIZE - (len % TINY_QUANTUM_SIZE)));
+        address->totalLength = TINY_LENGTH;
         address->length = TINY_LENGTH - header_length;
         address->length -= zone_header;
         address->length -= length_with_quantum;
@@ -99,6 +100,7 @@ void    *ft_create_new_list_region(size_t len, t_region *address)
         header_length = (sizeof(t_region) + (SMALL_QUANTUM_SIZE - (sizeof(t_region) % SMALL_QUANTUM_SIZE)));
         zone_header = (sizeof(t_zone) + (SMALL_QUANTUM_SIZE - (sizeof(t_zone) % SMALL_QUANTUM_SIZE)));
         length_with_quantum = (len + (SMALL_QUANTUM_SIZE - (len % SMALL_QUANTUM_SIZE)));
+		address->totalLength = SMALL_LENGTH;
         address->length = SMALL_LENGTH - header_length;
         address->length -= zone_header;
         address->length -= length_with_quantum;
@@ -109,6 +111,7 @@ void    *ft_create_new_list_region(size_t len, t_region *address)
         header_length = (sizeof(t_region) + (LARGE_QUANTUM_SIZE - (sizeof(t_region) % LARGE_QUANTUM_SIZE)));
         zone_header = (sizeof(t_zone) + (LARGE_QUANTUM_SIZE - (sizeof(t_zone) % LARGE_QUANTUM_SIZE)));
         length_with_quantum = (len + (LARGE_QUANTUM_SIZE - (len % LARGE_QUANTUM_SIZE)));
+		address->totalLength = (len + (PAGESIZE - (len % PAGESIZE))) * 100;
         address->length = (len + (PAGESIZE - (len % PAGESIZE))) * 100 - header_length;
         address->length -= zone_header;
         address->length -= length_with_quantum;
@@ -116,7 +119,7 @@ void    *ft_create_new_list_region(size_t len, t_region *address)
     }
     lastElement = get_last_list_region(address->type);
     if (!lastElement)
-        base.tabList[address->type - 1] = address;
+        g_base.tabList[address->type - 1] = address;
     else
         lastElement->next = address;
     zone = address->zone;

@@ -12,7 +12,7 @@
 
 #include "../includes/ft_malloc.h"
 
-t_base base;
+t_base g_base;
 
 void    *ft_get_free_zone(t_region *region, size_t lenWithQuantium)
 {
@@ -35,9 +35,7 @@ t_zone *ft_find_zone(void *address, t_region *region)
     while(current)
     {
         if (current->content == address)
-        {
             return current;
-        }
         current = current->next;
     }
     return NULL;

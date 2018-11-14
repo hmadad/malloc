@@ -12,7 +12,7 @@
 
 #include "../includes/ft_malloc.h"
 
-t_base base;
+t_base g_base;
 
 void    ft_print_zone(t_zone *zone)
 {
@@ -73,9 +73,9 @@ void    ft_print_region(t_region *region, size_t regionType)
 void    ft_show_alloc_mem()
 {
     if (get_list_region_length(TINY_TYPE) != 0)
-        ft_print_region(base.tabList[0], TINY_TYPE);
+        ft_print_region(g_base.tabList[0], TINY_TYPE);
     if (get_list_region_length(SMALL_TYPE) != 0)
-        ft_print_region(base.tabList[1], SMALL_TYPE);
+        ft_print_region(g_base.tabList[1], SMALL_TYPE);
     if (get_list_region_length(LARGE_TYPE) != 0)
-        ft_print_region(base.tabList[2], LARGE_TYPE);
+        ft_print_region(g_base.tabList[2], LARGE_TYPE);
 }

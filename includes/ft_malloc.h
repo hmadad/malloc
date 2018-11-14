@@ -53,7 +53,7 @@ typedef struct      s_base {
     struct s_region *tabList[3];
 }                   t_base;
 
-extern struct s_base base;
+extern struct s_base g_base;
 
 //MALLOC
 void	    *malloc(size_t len);
@@ -94,9 +94,11 @@ size_t      ft_strlen(const char *str);
 //FREE
 void	    free(void * address);
 void        ft_reset_str(char *str);
-void        defrag(t_region *region, size_t regionType);
 
 //REALLOC
 void	    *realloc(void * address, size_t newLength);
+
+//FT_OPTIMIZE
+void		defrag(t_region *region, size_t region_type);
 
 #endif //MALLOC_FT_MALLOC_H
