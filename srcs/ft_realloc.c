@@ -1,75 +1,80 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_realloc.c                                         :+:      :+:    :+: */
+/*   ft_realloc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmadad <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/08/31 12:04:00 by hmadad            #+#    #+#             */
-/*   Updated: 2018/08/31 15:11:51 by hmadad           ###   ########.fr       */
+/*   Created: 2018/11/14 17:13:15 by hmadad            #+#    #+#             */
+/*   Updated: 2018/11/14 17:22:49 by hmadad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_malloc.h"
 
-t_base g_base;
+t_base		g_base;
 
-void    ft_copy_and_free(void *newZone, t_zone *oldZone, size_t newLength)
+static void	ft_copy_and_free(void *new_zone,
+		t_zone *old_zone, size_t new_length)
 {
-    size_t i;
-    char *newMemory;
-    char *oldMemory;
+	size_t	i;
+	char	*new_memory;
+	char	*old_memory;
 
-    i = 0;
-    newMemory = (char*)newZone;
-    oldMemory = (char*)oldZone->content;
-    while(i < oldZone->length && i < newLength)
-    {
-        newMemory[i] = oldMemory[i];
-        i++;
-    }
-    oldZone->free = TRUE;
-    ft_reset_str(oldZone->content);
+	i = 0;
+	new_memory = (char*)new_zone;
+	old_memory = (char*)old_zone->content;
+	while (i < old_zone->length && i < new_length)
+	{
+		new_memory[i] = old_memory[i];
+		i++;
+	}
+	old_zone->free = TRUE;
+	ft_reset_str(old_zone->content);
 }
 
-void *ft_should_i_realloc(size_t newLength, t_zone *zone, t_region *region)
+static void	*ft_should_i_realloc(size_t new_length, t_zone *zone,
+		t_region *region)
 {
-    int type;
-    size_t len;
-    void *newMalloc;
+	int		type;
+	size_t	len;
+	void	*new_malloc;
 
-    type = ft_get_type_region(newLength);
-    if (type == TINY_TYPE)
-        len = (newLength + (TINY_QUANTUM_SIZE - (newLength % TINY_QUANTUM_SIZE )));
-    else if (type == SMALL_TYPE)
-        len = (newLength + (SMALL_QUANTUM_SIZE - (newLength % SMALL_QUANTUM_SIZE )));
-    else
-        len = (newLength + (LARGE_QUANTUM_SIZE - (newLength % LARGE_QUANTUM_SIZE)));
-    if (len == zone->length)
-        return zone->content;
-    else
-        newMalloc = malloc(newLength);
-    ft_copy_and_free(newMalloc, zone, newLength);
-    region->length += zone->length;
-    return newMalloc;
+	type = ft_get_type_region(new_length);
+	if (type == TINY_TYPE)
+		len = (new_length
+				+ (TINY_QUANTUM_SIZE - (new_length % TINY_QUANTUM_SIZE)));
+	else if (type == SMALL_TYPE)
+		len = (new_length
+				+ (SMALL_QUANTUM_SIZE - (new_length % SMALL_QUANTUM_SIZE)));
+	else
+		len = (new_length
+				+ (LARGE_QUANTUM_SIZE - (new_length % LARGE_QUANTUM_SIZE)));
+	if (len == zone->length)
+		return (zone->content);
+	else
+		new_malloc = malloc(new_length);
+	ft_copy_and_free(new_malloc, zone, new_length);
+	region->length += zone->length;
+	return (new_malloc);
 }
 
-void	*realloc(void * address, size_t newLength)
+void		*realloc(void *address, size_t new_length)
 {
-	t_region * region;
-    t_zone * zone;
-    void * ptr;
+	t_region	*region;
+	t_zone		*zone;
+	void		*ptr;
 
-    ptr = NULL;
-    if (!address)
-        return malloc(newLength);
-    region = ft_find_region(address);
-    if (!region)
-        return NULL;
-    zone = ft_find_zone(address, region);
-    if (!zone)
-        return NULL;
-    ptr = ft_should_i_realloc(newLength, zone, region);
-    defrag(region, ft_get_type_region(zone->length));
-    return ptr;
+	ptr = NULL;
+	if (!address)
+		return (malloc(new_length));
+	region = ft_find_region(address);
+	if (!region)
+		return (NULL);
+	zone = ft_find_zone(address, region);
+	if (!zone)
+		return (NULL);
+	ptr = ft_should_i_realloc(new_length, zone, region);
+	defrag(region, ft_get_type_region(zone->length));
+	return (ptr);
 }
