@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmadad <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/08/31 12:04:00 by hmadad            #+#    #+#             */
-/*   Updated: 2018/08/31 15:11:51 by hmadad           ###   ########.fr       */
+/*   Created: 2018/11/14 17:10:51 by hmadad            #+#    #+#             */
+/*   Updated: 2018/11/14 17:10:54 by hmadad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_malloc.h"
 
-void    ft_putstr(const char *str)
+void	ft_putstr(const char *str)
 {
-    write(1, str, ft_strlen(str));
+	write(1, str, ft_strlen(str));
 }
