@@ -20,7 +20,7 @@ int		get_list_region_length(size_t region)
 	size_t		i;
 
 	i = 0;
-	current = g_base.tabList[region - 1];
+	current = g_base.tab_list[region - 1];
 	while (current)
 	{
 		i++;
@@ -34,7 +34,7 @@ void	*ft_search_region_place(size_t region, size_t len)
 	t_region	*current;
 	size_t		quantum;
 
-	current = g_base.tabList[region - 1];
+	current = g_base.tab_list[region - 1];
 	while (current)
 	{
 		if (region == TINY_TYPE)
@@ -56,7 +56,7 @@ void	*get_last_list_region(size_t region)
 {
 	t_region	*current;
 
-	current = g_base.tabList[region - 1];
+	current = g_base.tab_list[region - 1];
 	while (current && current->next)
 		current = current->next;
 	return (current);
@@ -71,17 +71,17 @@ size_t	set_total_length(t_region *address, size_t len)
 	if (address->type == TINY_TYPE)
 	{
 		quantum = TINY_QUANTUM_SIZE;
-		address->totalLength = TINY_LENGTH;
+		address->total_length = TINY_LENGTH;
 	}
 	else if (address->type == SMALL_TYPE)
 	{
 		quantum = SMALL_QUANTUM_SIZE;
-		address->totalLength = SMALL_LENGTH;
+		address->total_length = SMALL_LENGTH;
 	}
 	else
 	{
 		quantum = LARGE_QUANTUM_SIZE;
-		address->totalLength = (len + (PAGESIZE - (len % PAGESIZE))) * 100;
+		address->total_length = (len + (PAGESIZE - (len % PAGESIZE))) * 100;
 	}
 	return (quantum);
 }
@@ -97,13 +97,13 @@ void	*ft_create_new_list_region(size_t len, t_region *address)
 	quantum = set_total_length(address, len);
 	header_len = (sizeof(t_region) + (quantum - (sizeof(t_region) % quantum)));
 	zone_header = (sizeof(t_zone) + (quantum - (sizeof(t_zone) % quantum)));
-	address->length = address->totalLength - header_len;
+	address->length = address->total_length - header_len;
 	address->length -= zone_header;
 	address->length -= (len + (quantum - (len % quantum)));
 	address->zone = (void *)address + header_len;
 	last_element = get_last_list_region(address->type);
 	if (!last_element)
-		g_base.tabList[address->type - 1] = address;
+		g_base.tab_list[address->type - 1] = address;
 	else
 		last_element->next = address;
 	zone = address->zone;

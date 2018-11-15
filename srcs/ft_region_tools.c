@@ -78,11 +78,11 @@ t_region	*ft_find_region(void *address)
 	i = 0;
 	while (i < 3)
 	{
-		current = g_base.tabList[i];
+		current = g_base.tab_list[i];
 		while (current)
 		{
 			if (address > (void *)current
-					&& address < ((void *)current + current->totalLength))
+					&& address < ((void *)current + current->total_length))
 				return (current);
 			current = current->next;
 		}

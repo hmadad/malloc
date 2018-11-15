@@ -10,8 +10,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4759b594-d5cf-418f-8f77-1f95dc8f3bcc" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/srcs/ft_region_tools.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/ft_region_tools.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/ft_malloc.h" beforeDir="false" afterPath="$PROJECT_DIR$/includes/ft_malloc.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/srcs/ft_show_alloc_mem.c" beforeDir="false" afterPath="$PROJECT_DIR$/srcs/ft_show_alloc_mem.c" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -33,43 +33,33 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="Makefile" value="1" />
-          <entry key="c" value="20" />
-          <entry key="h" value="2" />
+          <entry key="c" value="21" />
+          <entry key="h" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="Makefile" value="1" />
-          <entry key="ObjectiveC" value="22" />
+          <entry key="ObjectiveC" value="25" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Makefile" value="6" />
           <entry key="c" value="2353" />
-          <entry key="h" value="47" />
+          <entry key="h" value="67" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="Makefile" value="6" />
-          <entry key="ObjectiveC" value="2400" />
+          <entry key="ObjectiveC" value="2420" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/srcs/ft_show_alloc_mem.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="429">
-              <caret line="51" column="60" selection-start-line="51" selection-start-column="60" selection-end-line="51" selection-end-column="60" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -98,7 +88,6 @@
         <option value="$PROJECT_DIR$/main.c" />
         <option value="$PROJECT_DIR$/srcs/ft_delete_map.c" />
         <option value="$PROJECT_DIR$/Makefile" />
-        <option value="$PROJECT_DIR$/includes/ft_malloc.h" />
         <option value="$PROJECT_DIR$/srcs/ft_free.c" />
         <option value="$PROJECT_DIR$/srcs/ft_malloc.c" />
         <option value="$PROJECT_DIR$/srcs/ft_optimize.c" />
@@ -107,6 +96,8 @@
         <option value="$PROJECT_DIR$/srcs/ft_realloc.c" />
         <option value="$PROJECT_DIR$/srcs/ft_region_list.c" />
         <option value="$PROJECT_DIR$/srcs/ft_region_tools.c" />
+        <option value="$PROJECT_DIR$/srcs/ft_show_alloc_mem.c" />
+        <option value="$PROJECT_DIR$/includes/ft_malloc.h" />
       </list>
     </option>
   </component>
@@ -132,6 +123,11 @@
             <path>
               <item name="hmadad_malloc" type="b2602c69:ProjectViewProjectNode" />
               <item name="hmadad_malloc" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="hmadad_malloc" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hmadad_malloc" type="462c0819:PsiDirectoryNode" />
+              <item name="includes" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="hmadad_malloc" type="b2602c69:ProjectViewProjectNode" />
@@ -175,16 +171,15 @@
       <updated>1541153077113</updated>
       <workItem from="1541153078403" duration="9649000" />
       <workItem from="1542188281695" duration="20236000" />
-      <workItem from="1542274437198" duration="2336000" />
+      <workItem from="1542274437198" duration="3974000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32221000" />
+    <option name="totallyTimeSpent" value="33859000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="2560" height="1440" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16560763" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -284,13 +279,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/includes/ft_malloc.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="57" column="8" selection-start-line="57" selection-start-column="8" selection-end-line="57" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/srcs/ft_region_tools.c">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="745">
@@ -300,8 +288,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/srcs/ft_show_alloc_mem.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="429">
-          <caret line="51" column="60" selection-start-line="51" selection-start-column="60" selection-end-line="51" selection-end-column="60" />
+        <state relative-caret-position="542">
+          <caret line="52" column="23" selection-start-line="52" selection-start-column="23" selection-end-line="52" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/includes/ft_malloc.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="782">
+          <caret line="120" column="2" lean-forward="true" selection-start-line="120" selection-start-column="2" selection-end-line="120" selection-end-column="2" />
         </state>
       </provider>
     </entry>

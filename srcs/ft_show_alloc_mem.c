@@ -6,7 +6,7 @@
 /*   By: hmadad <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/15 11:32:56 by hmadad            #+#    #+#             */
-/*   Updated: 2018/11/15 11:45:43 by hmadad           ###   ########.fr       */
+/*   Updated: 2018/11/15 14:01:50 by hmadad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,9 @@ void	ft_print_region(t_region *region, size_t region_type)
 void	ft_show_alloc_mem(void)
 {
 	if (get_list_region_length(TINY_TYPE) != 0)
-		ft_print_region(g_base.tabList[0], TINY_TYPE);
+		ft_print_region(g_base.tab_list[0], TINY_TYPE);
 	if (get_list_region_length(SMALL_TYPE) != 0)
-		ft_print_region(g_base.tabList[1], SMALL_TYPE);
+		ft_print_region(g_base.tab_list[1], SMALL_TYPE);
 	if (get_list_region_length(LARGE_TYPE) != 0)
-		ft_print_region(g_base.tabList[2], LARGE_TYPE);
+		ft_print_region(g_base.tab_list[2], LARGE_TYPE);
 }

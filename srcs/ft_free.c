@@ -21,14 +21,14 @@ static void		delete_map(t_region *region, t_zone *zone)
 	t_region	*previous;
 
 	type = ft_get_type_region(zone->length);
-	current = g_base.tabList[type - 1];
+	current = g_base.tab_list[type - 1];
 	previous = NULL;
 	while (current)
 	{
-		if (current == region && g_base.tabList[type - 1] != region)
+		if (current == region && g_base.tab_list[type - 1] != region)
 		{
 			previous->next = current->next;
-			munmap(region, current->totalLength);
+			munmap(region, current->total_length);
 			return ;
 		}
 		previous = current;
