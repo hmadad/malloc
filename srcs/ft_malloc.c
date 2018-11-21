@@ -12,7 +12,7 @@
 
 #include "../includes/ft_malloc.h"
 
-t_base	g_base;
+t_base	g_base = {.mutex = PTHREAD_MUTEX_INITIALIZER, .called = 0};
 
 void	*ft_create_region(size_t len)
 {
@@ -56,13 +56,15 @@ void	*malloc(size_t len)
 {
 	void	*address;
 
+	pthread_mutex_lock(&g_base.mutex);
 	address = NULL;
-	if (!g_base.called || g_base.called == 0)
+	if (!g_base.called)
 	{
-		g_base.called = 1;
+		g_base.called = '1';
 		address = ft_create_region(len);
 	}
 	else
 		address = ft_select_region(ft_get_type_region(len), len);
+	pthread_mutex_unlock(&g_base.mutex);
 	return ((void*)address);
 }

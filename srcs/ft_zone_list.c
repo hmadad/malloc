@@ -31,11 +31,13 @@ void		*ft_get_free_zone(t_region *region, size_t len_quantum)
 t_zone		*ft_find_zone(void *address, t_region *region)
 {
 	t_zone	*current;
+	size_t	quantum;
 
 	current = region->zone;
+	quantum = get_quantum(current->length);
 	while (current)
 	{
-		if (current->content == address)
+		if (((void *)current + quantum) == address)
 			return (current);
 		current = current->next;
 	}
@@ -59,7 +61,6 @@ void		*ft_create_new_zone_list(t_zone *new_zone,
 			new_next->next = new_zone->next;
 		else
 			new_next->next = NULL;
-		new_next->content = (void *)new_next + zone_header_length;
 	}
 	new_zone->free = FALSE;
 	if (new_next)
@@ -67,6 +68,5 @@ void		*ft_create_new_zone_list(t_zone *new_zone,
 		new_zone->length = zone_length;
 		new_zone->next = new_next;
 	}
-	new_zone->content = (void *)new_zone + zone_header_length;
-	return ((void *)new_zone->content);
+	return ((void *)new_zone + zone_header_length);
 }

@@ -6,7 +6,7 @@
 /*   By: hmadad <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/08/31 12:04:00 by hmadad            #+#    #+#             */
-/*   Updated: 2018/11/14 17:40:01 by hmadad           ###   ########.fr       */
+/*   Updated: 2018/11/15 15:08:13 by hmadad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int		get_list_region_length(size_t region)
 	size_t		i;
 
 	i = 0;
-	current = g_base.tab_list[region - 1];
+	current = g_base.tab_list[region - 48];
 	while (current)
 	{
 		i++;
@@ -34,18 +34,17 @@ void	*ft_search_region_place(size_t region, size_t len)
 	t_region	*current;
 	size_t		quantum;
 
-	current = g_base.tab_list[region - 1];
+	current = g_base.tab_list[region - 48];
+	if (region == TINY_TYPE)
+		quantum = TINY_QUANTUM_SIZE;
+	else if (region == SMALL_TYPE)
+		quantum = SMALL_QUANTUM_SIZE;
+	else
+		quantum = LARGE_QUANTUM_SIZE;
 	while (current)
 	{
-		if (region == TINY_TYPE)
-			quantum = TINY_QUANTUM_SIZE;
-		else if (region == SMALL_TYPE)
-			quantum = SMALL_QUANTUM_SIZE;
-		else
-			quantum = LARGE_QUANTUM_SIZE;
-		if (current->length >
-				(sizeof(t_zone) + (quantum - (sizeof(t_zone) % quantum)))
-				+ (len + (quantum - (len % quantum))))
+		if (ft_get_free_zone(current, (sizeof(t_zone) + (quantum
+		- (sizeof(t_zone) % quantum))) + (len + (quantum - (len % quantum)))))
 			return (current);
 		current = current->next;
 	}
@@ -56,7 +55,7 @@ void	*get_last_list_region(size_t region)
 {
 	t_region	*current;
 
-	current = g_base.tab_list[region - 1];
+	current = g_base.tab_list[region - 48];
 	while (current && current->next)
 		current = current->next;
 	return (current);
@@ -65,15 +64,16 @@ void	*get_last_list_region(size_t region)
 size_t	set_total_length(t_region *address, size_t len)
 {
 	size_t		quantum;
+	size_t		type;
 
 	address->next = NULL;
-	address->type = ft_get_type_region(len);
-	if (address->type == TINY_TYPE)
+	type = ft_get_type_region(len);
+	if (type == TINY_TYPE)
 	{
 		quantum = TINY_QUANTUM_SIZE;
 		address->total_length = TINY_LENGTH;
 	}
-	else if (address->type == SMALL_TYPE)
+	else if (type == SMALL_TYPE)
 	{
 		quantum = SMALL_QUANTUM_SIZE;
 		address->total_length = SMALL_LENGTH;
@@ -96,20 +96,20 @@ void	*ft_create_new_list_region(size_t len, t_region *address)
 
 	quantum = set_total_length(address, len);
 	header_len = (sizeof(t_region) + (quantum - (sizeof(t_region) % quantum)));
-	zone_header = (sizeof(t_zone) + (quantum - (sizeof(t_zone) % quantum)));
-	address->length = address->total_length - header_len;
-	address->length -= zone_header;
-	address->length -= (len + (quantum - (len % quantum)));
+	zone_header = (sizeof(t_zone) + ((quantum - (sizeof(t_zone) % quantum))
+			== quantum ? 0 : (quantum - (sizeof(t_zone) % quantum))));
 	address->zone = (void *)address + header_len;
-	last_element = get_last_list_region(address->type);
+	last_element = get_last_list_region(ft_get_type_region(len));
 	if (!last_element)
-		g_base.tab_list[address->type - 1] = address;
+		g_base.tab_list[ft_get_type_region(len) - 48] = address;
 	else
 		last_element->next = address;
 	zone = address->zone;
-	zone->length = address->length;
+	zone->length = address->total_length - (header_len + zone_header
+			+ (len + (quantum - (len % quantum))));
 	zone->free = TRUE;
 	zone->next = NULL;
 	return (ft_create_new_zone_list((t_zone *)address->zone,
-			(len + (quantum - (len % quantum))), zone_header));
+			(len + ((quantum - (len % quantum)) == quantum
+			? 0 : (quantum - (len % quantum)))), zone_header));
 }

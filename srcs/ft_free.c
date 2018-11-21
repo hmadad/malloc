@@ -21,11 +21,11 @@ static void		delete_map(t_region *region, t_zone *zone)
 	t_region	*previous;
 
 	type = ft_get_type_region(zone->length);
-	current = g_base.tab_list[type - 1];
+	current = g_base.tab_list[type - 48];
 	previous = NULL;
 	while (current)
 	{
-		if (current == region && g_base.tab_list[type - 1] != region)
+		if (current == region && g_base.tab_list[type - 48] != region)
 		{
 			previous->next = current->next;
 			munmap(region, current->total_length);
@@ -62,23 +62,39 @@ void			ft_reset_str(char *str)
 	}
 }
 
+void			ft_prepare_reset(t_zone *zone)
+{
+	size_t	quantum;
+
+	zone->free = TRUE;
+	quantum = get_quantum(zone->length);
+	ft_reset_str((void *)zone + quantum);
+}
+
 void			free(void *address)
 {
 	t_region	*region;
 	t_zone		*zone;
 
+	pthread_mutex_lock(&g_base.mutex);
 	if (!address)
+	{
+		pthread_mutex_unlock(&g_base.mutex);
 		return ;
-	region = ft_find_region(address);
-	if (!region)
+	}
+	if (!(region = ft_find_region(address)))
+	{
+		pthread_mutex_unlock(&g_base.mutex);
 		return ;
-	zone = ft_find_zone(address, region);
-	if (!zone)
+	}
+	if (!(zone = ft_find_zone(address, region)))
+	{
+		pthread_mutex_unlock(&g_base.mutex);
 		return ;
-	zone->free = TRUE;
-	ft_reset_str(zone->content);
-	region->length += zone->length;
-	defrag(region, ft_get_type_region(zone->length));
+	}
+	ft_prepare_reset(zone);
+	defrag(region);
 	if (is_empty_region(region) == TRUE)
 		delete_map(region, zone);
+	pthread_mutex_unlock(&g_base.mutex);
 }

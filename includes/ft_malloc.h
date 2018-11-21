@@ -6,7 +6,7 @@
 /*   By: hmadad <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/11/15 12:03:39 by hmadad            #+#    #+#             */
-/*   Updated: 2018/11/15 13:59:40 by hmadad           ###   ########.fr       */
+/*   Updated: 2018/11/15 15:54:39 by hmadad           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <sys/mman.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <pthread.h>
 
 /*
 ** PAGE SIZE
@@ -25,7 +26,7 @@
 /*
 ** LIMIT LENGTH
 */
-# define TINY_LIMIT 992
+# define TINY_LIMIT 1196
 # define SMALL_LIMIT 127000
 
 /*
@@ -41,25 +42,29 @@
 # define SMALL_QUANTUM_SIZE 512
 # define LARGE_QUANTUM_SIZE 4000
 
-enum				{ TINY_TYPE = 1, SMALL_TYPE = 2, LARGE_TYPE = 3 };
-enum				{ FALSE = 0, TRUE = 1 };
+/*
+** MUTEX
+*/
+# define LOCK(mtx) pthread_mutex_lock(mtx)
+# define UNLOCK(mtx) pthread_mutex_unlock(mtx)
+
+enum				{ TINY_TYPE = '0', SMALL_TYPE = '1', LARGE_TYPE = '2' };
+enum				{ FALSE = '0', TRUE = '1' };
 typedef struct		s_zone {
-	size_t			length;
-	size_t			free;
+	unsigned int	length;
+	unsigned char	free;
 	struct s_zone	*next;
-	void			*content;
 }					t_zone;
 
 typedef struct		s_region {
-	size_t				type;
-	size_t				length;
-	size_t				total_length;
+	unsigned int		total_length;
 	struct s_region		*next;
 	struct s_zone		*zone;
 }					t_region;
 
 typedef struct		s_base {
-	int				called;
+	pthread_mutex_t	mutex;
+	unsigned char	called;
 	struct s_region	*tab_list[3];
 }					t_base;
 
@@ -122,6 +127,7 @@ void				*realloc(void *address, size_t new_length);
 /*
 ** FT_OPTIMIZE
 */
-void				defrag(t_region *region, size_t region_type);
+void				defrag(t_region *region);
+size_t				get_quantum(size_t len);
 
 #endif

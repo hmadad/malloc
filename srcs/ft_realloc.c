@@ -21,20 +21,20 @@ static void	ft_copy_and_free(void *new_zone,
 	char	*new_memory;
 	char	*old_memory;
 
-	i = 0;
+	i = get_quantum(old_zone->length);
 	new_memory = (char*)new_zone;
-	old_memory = (char*)old_zone->content;
+	old_memory = (char*)old_zone + i;
+	i = 0;
 	while (i < old_zone->length && i < new_length)
 	{
 		new_memory[i] = old_memory[i];
 		i++;
 	}
 	old_zone->free = TRUE;
-	ft_reset_str(old_zone->content);
+	ft_reset_str((void *)old_memory);
 }
 
-static void	*ft_should_i_realloc(size_t new_length, t_zone *zone,
-		t_region *region)
+static void	*ft_should_i_realloc(size_t new_length, t_zone *zone)
 {
 	int		type;
 	size_t	len;
@@ -51,11 +51,14 @@ static void	*ft_should_i_realloc(size_t new_length, t_zone *zone,
 		len = (new_length
 				+ (LARGE_QUANTUM_SIZE - (new_length % LARGE_QUANTUM_SIZE)));
 	if (len == zone->length)
-		return (zone->content);
+		return ((void *)zone + get_quantum(new_length));
 	else
+	{
+		pthread_mutex_unlock(&g_base.mutex);
 		new_malloc = malloc(new_length);
+		pthread_mutex_lock(&g_base.mutex);
+	}
 	ft_copy_and_free(new_malloc, zone, new_length);
-	region->length += zone->length;
 	return (new_malloc);
 }
 
@@ -65,16 +68,25 @@ void		*realloc(void *address, size_t new_length)
 	t_zone		*zone;
 	void		*ptr;
 
+	pthread_mutex_lock(&g_base.mutex);
 	ptr = NULL;
 	if (!address)
+	{
+		pthread_mutex_unlock(&g_base.mutex);
 		return (malloc(new_length));
-	region = ft_find_region(address);
-	if (!region)
+	}
+	if (!(region = ft_find_region(address)))
+	{
+		pthread_mutex_unlock(&g_base.mutex);
 		return (NULL);
-	zone = ft_find_zone(address, region);
-	if (!zone)
+	}
+	if (!(zone = ft_find_zone(address, region)))
+	{
+		pthread_mutex_unlock(&g_base.mutex);
 		return (NULL);
-	ptr = ft_should_i_realloc(new_length, zone, region);
-	defrag(region, ft_get_type_region(zone->length));
+	}
+	ptr = ft_should_i_realloc(new_length, zone);
+	defrag(region);
+	pthread_mutex_unlock(&g_base.mutex);
 	return (ptr);
 }

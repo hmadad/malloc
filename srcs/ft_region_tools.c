@@ -27,7 +27,6 @@ int			ft_get_type_region(size_t len)
 void		*set_region_value(size_t region_type, t_region *region, size_t len)
 {
 	size_t		quantum;
-	size_t		zone_header;
 	size_t		length_with_quantum;
 	void		*address;
 
@@ -38,9 +37,8 @@ void		*set_region_value(size_t region_type, t_region *region, size_t len)
 		quantum = SMALL_QUANTUM_SIZE;
 	else
 		quantum = LARGE_QUANTUM_SIZE;
-	zone_header = (sizeof(t_zone) + (quantum - (sizeof(t_zone) % quantum)));
-	length_with_quantum = (len + (quantum - (len % quantum)));
-	region->length = region->length - (zone_header + length_with_quantum);
+	length_with_quantum = (len + ((quantum - (len % quantum))
+			== quantum ? 0 : (quantum - (len % quantum))));
 	address = ft_get_free_zone(region, length_with_quantum);
 	if (!address)
 	{
@@ -49,7 +47,9 @@ void		*set_region_value(size_t region_type, t_region *region, size_t len)
 	}
 	else
 		address = ft_create_new_zone_list((t_zone *)address,
-				length_with_quantum, zone_header);
+				length_with_quantum, (sizeof(t_zone) + ((quantum
+				- (sizeof(t_zone) % quantum)) == quantum
+				? 0 : (quantum - (sizeof(t_zone) % quantum)))));
 	return (address);
 }
 

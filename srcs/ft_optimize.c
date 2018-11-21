@@ -12,27 +12,14 @@
 
 #include "../includes/ft_malloc.h"
 
-static size_t	get_header_size(size_t region_type)
-{
-	if (region_type == TINY_TYPE)
-		return ((sizeof(t_zone)
-		+ (TINY_QUANTUM_SIZE - (sizeof(t_zone) % TINY_QUANTUM_SIZE))));
-	else if (region_type == SMALL_TYPE)
-		return ((sizeof(t_zone)
-		+ (SMALL_QUANTUM_SIZE - (sizeof(t_zone) % SMALL_QUANTUM_SIZE))));
-	else
-		return ((sizeof(t_zone)
-		+ (LARGE_QUANTUM_SIZE - (sizeof(t_zone) % LARGE_QUANTUM_SIZE))));
-}
-
-void			defrag(t_region *region, size_t region_type)
+void			defrag(t_region *region)
 {
 	t_zone	*current;
 	t_zone	*next;
 	size_t	zone_header;
 
 	current = region->zone;
-	zone_header = get_header_size(region_type);
+	zone_header = get_quantum(current->length);
 	while (current)
 	{
 		if (current->free == TRUE)
@@ -47,4 +34,20 @@ void			defrag(t_region *region, size_t region_type)
 		}
 		current = current->next;
 	}
+}
+
+size_t			get_quantum(size_t len)
+{
+	size_t	quantum;
+
+	if (len <= (TINY_LIMIT
+	+ (TINY_QUANTUM_SIZE - (TINY_LIMIT % TINY_QUANTUM_SIZE))))
+		quantum = TINY_QUANTUM_SIZE;
+	else if (len <= (SMALL_LIMIT
+	+ (SMALL_QUANTUM_SIZE - (TINY_LIMIT % SMALL_QUANTUM_SIZE))))
+		quantum = SMALL_QUANTUM_SIZE;
+	else
+		quantum = LARGE_QUANTUM_SIZE;
+	return (sizeof(t_zone) + ((quantum - (sizeof(t_zone) % quantum))
+	== quantum ? 0 : (quantum - (sizeof(t_zone) % quantum))));
 }

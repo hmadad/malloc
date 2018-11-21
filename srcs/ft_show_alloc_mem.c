@@ -14,33 +14,45 @@
 
 t_base	g_base;
 
-void	ft_print_zone(t_zone *zone)
+static void	ft_print_free_zone(t_zone *zone, size_t quantum)
 {
+	write(1, "0x", 2);
+	ft_putnbr_base((size_t)((void*)zone + quantum), 16);
+	ft_putstr(" : ");
+	ft_putnbr_base((size_t)zone->length, 10);
+	ft_putstr(" octets - FREE\n");
+}
+
+void		ft_print_zone(t_zone *zone)
+{
+	size_t	quantum;
+	size_t	total;
+
+	total = 0;
+	quantum = get_quantum(zone->length);
 	while (zone)
 	{
 		if (zone->free == FALSE)
 		{
 			write(1, "0x", 2);
-			ft_putnbr_base((size_t)zone->content, 16);
+			ft_putnbr_base((size_t)((void*)zone + quantum), 16);
 			ft_putstr(" - 0x");
-			ft_putnbr_base((size_t)(zone->content + zone->length), 16);
+			ft_putnbr_base((size_t)((void*)zone + quantum + zone->length), 16);
 			ft_putstr(" : ");
 			ft_putnbr_base((size_t)zone->length, 10);
 			ft_putstr(" octets\n");
+			total += zone->length;
 		}
 		else
-		{
-			write(1, "0x", 2);
-			ft_putnbr_base((size_t)zone->content, 16);
-			ft_putstr(" : ");
-			ft_putnbr_base((size_t)zone->length, 10);
-			ft_putstr(" octets - FREE\n");
-		}
+			ft_print_free_zone(zone, quantum);
 		zone = zone->next;
 	}
+	ft_putstr("Total : ");
+	ft_putnbr_base(total, 10);
+	ft_putstr(" octets\n");
 }
 
-void	ft_print_region(t_region *region, size_t region_type)
+void		ft_print_region(t_region *region, size_t region_type)
 {
 	while (region)
 	{
@@ -58,7 +70,7 @@ void	ft_print_region(t_region *region, size_t region_type)
 	}
 }
 
-void	ft_show_alloc_mem(void)
+void		ft_show_alloc_mem(void)
 {
 	if (get_list_region_length(TINY_TYPE) != 0)
 		ft_print_region(g_base.tab_list[0], TINY_TYPE);
