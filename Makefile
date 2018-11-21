@@ -17,7 +17,7 @@ NAME= libft_malloc_$(HOSTTYPE).so
 all:$(NAME)
 
 test: all
-	@gcc -L $(shell pwd) $(CFLAGS) -o malloc main.c -lft_malloc
+	@gcc -L $(shell pwd) $(CFLAGS) -o malloc main.c -lft_malloc -lpthread
 
 $(NAME):$(OBJECTS)
 	@$(CC) $^ $(LDFLAGS) -o $@ $(INCLUDE) $(CFLAGS)
